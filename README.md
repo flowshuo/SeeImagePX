@@ -1,0 +1,2 @@
+# SeeImagePX
+基于python和OpenCV的图形界面下图形鼠标处的像素位置和灰度值等信息显示。
