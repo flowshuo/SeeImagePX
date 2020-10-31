@@ -1,11 +1,15 @@
 import cv2
 import numpy as np
 from tkinter import *
+import tkinter.filedialog as TF
+from time import sleep
 
+file = TF.askopenfilename()
+sleep(1)
+img = cv2.imread(file)
 # 图片路径
-img = cv2.imread('0.jpg')
-a = []
-b = []
+#img = cv2.imread('0.jpg')
+
 win = Tk()
 win.title('zuobiao')
 win.geometry('300x200')
@@ -22,21 +26,21 @@ def on_EVENT_LBUTTONDOWN(event, x, y,param,er):
     if event == cv2.EVENT_MOUSEMOVE:
         xy = "%d,%d" % (x, y)
         g = gray[y,x]
-        a.append(x)
-        b.append(y)
+        try:
+            t1.delete(1.0,END)
+            t1.insert('insert', xy)
+            # Label(win, text='灰度值', width=10, height=5).grid(column = 0,row = 1)
+            t2.delete(1.0,END)
+            t2.insert('insert',g)
+            win.mainloop()
+            #cv2.circle(img, (x, y), 1, (0, 0, 255), thickness=-1)
+            #cv2.putText(img, xy, (x, y), cv2.FONT_HERSHEY_PLAIN,
+             #           1.0, (0, 0, 0), thickness=1)
 
-        t1.delete(1.0,END)
-        t1.insert('insert', xy)
-        # Label(win, text='灰度值', width=10, height=5).grid(column = 0,row = 1)
-        t2.delete(1.0,END)
-        t2.insert('insert',g)
-        win.mainloop()
-        #cv2.circle(img, (x, y), 1, (0, 0, 255), thickness=-1)
-        #cv2.putText(img, xy, (x, y), cv2.FONT_HERSHEY_PLAIN,
-         #           1.0, (0, 0, 0), thickness=1)
-
-        cv2.imshow("image", img)
-        #print(x, y)
+            cv2.imshow("image", img)
+            #print(x, y)
+        except:
+            return None
 
 
 cv2.namedWindow("image")
