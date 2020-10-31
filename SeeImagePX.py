@@ -1,70 +1,76 @@
 import cv2
 from tkinter import *
-import tkinter.filedialog as TF
+import tkinter.filedialog as tf
+from PIL import Image, ImageTk
 
-def get_info_by_locate(color,gray,x,y):
+
+#解决了基本的界面整合
+#残留问题1：没有排版
+#残留问题2：图片label仍然存在超界问题（可能是自带边框的缘故，能捕获的坐标比图片大）
+#残留问题3：路径框不显示
+#残留问题4：没有做第二次打开图片的处理
+
+
+def get_info_by_locate(x, y):
     g = gray[y, x]
     cb = color[y, x][0]
     cg = color[y, x][1]
     cr = color[y, x][2]
     return g, cb, cg, cr
 
-file = TF.askopenfilename()
-img = cv2.imread(file)
+
+def fresh_info(x, y):
+    xy = "%d,%d" % (x, y)
+    g, cb, cg, cr = get_info_by_locate(x, y)
+    bgr = "%d,%d,%d" % (cb, cg, cr)
+
+    t1.delete(1.0, END)
+    t1.insert('insert', xy)
+    t2.delete(1.0, END)
+    t2.insert('insert', g)
+    t3.delete(1.0, END)
+    t3.insert('insert', bgr)
+
+
+def open_image():
+    file_dir = tf.askopenfilename()
+    ima_ety.delete(1, END)
+    ima_ety.insert(0, file_dir)
+    if file_dir != '':
+        source_img = cv2.imread(file_dir)
+
+        global color
+        color = cv2.cvtColor(source_img, cv2.COLOR_BGR2RGB)
+        global gray
+        gray = cv2.cvtColor(source_img, cv2.COLOR_BGR2GRAY)
+
+        rgb_img = cv2.cvtColor(source_img, cv2.COLOR_BGR2RGB)
+        rgb_img = Image.fromarray(rgb_img)
+        rgb_img = ImageTk.PhotoImage(rgb_img)
+        ima_label = Label(win)
+        ima_label.configure(image=rgb_img)
+        ima_label.image = rgb_img
+        ima_label.grid(column=0, row=2)
+        ima_label.bind("<Motion>", mouse_move)
+
+
+def mouse_move(event):
+    print(f"X:{event.x},Y:{event.y}")
+    fresh_info(event.x, event.y)
+
 
 win = Tk()
 win.title('图片框')
-win.geometry('300x200')
-color = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+ima_ety = Entry(win, textvariable=StringVar(), borderwidth=1, state=DISABLED)
+ima_ety.grid(column=0, row=0)
+ima_bt = Button(win, text='选择', command=open_image)
+ima_bt.grid(column=1, row=0)
 
-Label(win, text='二维坐标', width=10, height=5).grid(column=0, row=0)
-Label(win, text='灰度值', width=10, height=5).grid(column=0, row=1)
+t1 = Text(win, width=10, height=1)
+t1.grid(column=0, row=1)
+t2 = Text(win, width=10, height=1)
+t2.grid(column=1, row=1)
+t3 = Text(win, width=10, height=1)
+t3.grid(column=2, row=1)
 
-t1 = Text(win, width=10, height=3)
-t1.grid(column = 1,row = 0)
-t2 = Text(win, width=10, height=3)
-t2.grid(column = 1,row=1)
-
-def on_EVENT_LBUTTONDOWN(event, x, y,param,er):
-    if event == cv2.EVENT_MOUSEMOVE:
-        xy = "%d,%d" % (x, y)
-        g, cb, cg, cr = get_info_by_locate(color, gray, x, y)
-        try:
-            t1.delete(1.0,END)
-            t1.insert('insert', xy)
-            # Label(win, text='灰度值', width=10, height=5).grid(column = 0,row = 1)
-            t2.delete(1.0,END)
-            t2.insert('insert', g)
-            t2.insert('insert', ',')
-            t2.insert('insert', cb)
-            t2.insert('insert', ',')
-            t2.insert('insert', cg)
-            t2.insert('insert', ',')
-            t2.insert('insert', cr)
-            cv2.imshow("image", img)
-            # print(x, y)
-        except:
-            return None
-
-
-cv2.namedWindow("image")
-cv2.setMouseCallback("image", on_EVENT_LBUTTONDOWN)
-cv2.imshow("image", img)
 win.mainloop()
-cv2.waitKey(0)
-
-#print(a[0], b[0])
-cv2.destroyAllWindows()
-
-'''
-位置参数说明：
-
-图片
-要添加的文字
-文字添加到图片上的位置
-字体的类型
-字体大小
-字体颜色
-字体粗细
-'''

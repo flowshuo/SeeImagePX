@@ -4,8 +4,8 @@ import cv2
 from PIL import Image,ImageTk
 from tkinter import filedialog
 
-def mouseMove(self,event):
-    print(event.x)
+def mouseMove(event):
+    print(f"X:{event.x}")
 
 # global start 全局变量定义初始化开始
 carmela_hight = 300
@@ -55,6 +55,7 @@ def AskPicture():
         Source_Img_Label = tkinter.Label(root,bg='red',image=Rgb_Img,width=carmela_width,height=carmela_hight)
         Source_Img_Label.image = Rgb_Img
         Source_Img_Label.place(x=10,y=40)
+        Source_Img_Label.bind("<Motion>",mouseMove)
     else:#不是的话更改Label中的图片
         Source_Img_Label.configure(image=Rgb_Img)
         Source_Img_Label.image = Rgb_Img
