@@ -5,7 +5,6 @@ import tkinter.filedialog as TF
 from time import sleep
 
 file = TF.askopenfilename()
-sleep(1)
 img = cv2.imread(file)
 # 图片路径
 #img = cv2.imread('0.jpg')
@@ -32,7 +31,6 @@ def on_EVENT_LBUTTONDOWN(event, x, y,param,er):
             # Label(win, text='灰度值', width=10, height=5).grid(column = 0,row = 1)
             t2.delete(1.0,END)
             t2.insert('insert',g)
-            win.mainloop()
             #cv2.circle(img, (x, y), 1, (0, 0, 255), thickness=-1)
             #cv2.putText(img, xy, (x, y), cv2.FONT_HERSHEY_PLAIN,
              #           1.0, (0, 0, 0), thickness=1)
@@ -46,7 +44,9 @@ def on_EVENT_LBUTTONDOWN(event, x, y,param,er):
 cv2.namedWindow("image")
 cv2.setMouseCallback("image", on_EVENT_LBUTTONDOWN)
 cv2.imshow("image", img)
+win.mainloop()
 cv2.waitKey(0)
+
 #print(a[0], b[0])
 cv2.destroyAllWindows()
 
