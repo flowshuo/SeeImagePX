@@ -1,17 +1,21 @@
 import cv2
-import numpy as np
 from tkinter import *
 import tkinter.filedialog as TF
-from time import sleep
+
+def get_info_by_locate(color,gray,x,y):
+    g = gray[y, x]
+    cb = color[y, x][0]
+    cg = color[y, x][1]
+    cr = color[y, x][2]
+    return g, cb, cg, cr
 
 file = TF.askopenfilename()
 img = cv2.imread(file)
-# 图片路径
-#img = cv2.imread('0.jpg')
 
 win = Tk()
-win.title('zuobiao')
+win.title('图片框')
 win.geometry('300x200')
+color = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
 Label(win, text='二维坐标', width=10, height=5).grid(column=0, row=0)
@@ -21,22 +25,25 @@ t1 = Text(win, width=10, height=3)
 t1.grid(column = 1,row = 0)
 t2 = Text(win, width=10, height=3)
 t2.grid(column = 1,row=1)
+
 def on_EVENT_LBUTTONDOWN(event, x, y,param,er):
     if event == cv2.EVENT_MOUSEMOVE:
         xy = "%d,%d" % (x, y)
-        g = gray[y,x]
+        g, cb, cg, cr = get_info_by_locate(color, gray, x, y)
         try:
             t1.delete(1.0,END)
             t1.insert('insert', xy)
             # Label(win, text='灰度值', width=10, height=5).grid(column = 0,row = 1)
             t2.delete(1.0,END)
-            t2.insert('insert',g)
-            #cv2.circle(img, (x, y), 1, (0, 0, 255), thickness=-1)
-            #cv2.putText(img, xy, (x, y), cv2.FONT_HERSHEY_PLAIN,
-             #           1.0, (0, 0, 0), thickness=1)
-
+            t2.insert('insert', g)
+            t2.insert('insert', ',')
+            t2.insert('insert', cb)
+            t2.insert('insert', ',')
+            t2.insert('insert', cg)
+            t2.insert('insert', ',')
+            t2.insert('insert', cr)
             cv2.imshow("image", img)
-            #print(x, y)
+            # print(x, y)
         except:
             return None
 

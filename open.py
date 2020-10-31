@@ -4,6 +4,9 @@ import cv2
 from PIL import Image,ImageTk
 from tkinter import filedialog
 
+def mouseMove(self,event):
+    print(event.x)
+
 # global start 全局变量定义初始化开始
 carmela_hight = 300
 carmela_width = 300
