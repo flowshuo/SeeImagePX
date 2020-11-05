@@ -36,6 +36,7 @@ def fresh_info(x, y):
 def open_url():
     web.open('https://flowshuo.github.io/SeeImagePX/')
 
+
 def open_image():
     file_dir = tf.askopenfilename()
     source_img = cv2.imread(file_dir)
